@@ -33,7 +33,7 @@ Managed objects are organized into a treelike hierarchy. This structure is the b
 
 In the object tree, the node at the top of the tree is called the root, anything with children is called a subtree, and anything without children is called a leaf node.
 
-![avatar](./resources/MIB_Tree_1.jpg)
+![avatar](../resources/MIB_Tree_1.jpg)
 
 ### Defining OIDS
 The SYNTAX attribute provides for definition of managed objects through a subset of ANS.1.
@@ -52,3 +52,5 @@ Table 2-1. SMIv1 datatypes
 | IpAddress | Represents a 32-bit IPv4 address. Neither SMIv1 nor SMIv2 discusses 128-bit IPv6 addresses. |
 | NetworkAddress | Same as the IpAddress type, but can represent different network address types. |
 | Gauge | A 32-bit number with minimum value 0 and maximum value 2<sup>32</sup>-1 (4,294,967,295). Unlike a Counter, a Gauge can increase and decrease at will, but it can never exceed its maximum value. The interface speed on a router is measured with a Gauge. |
+| TimeTicks | A 32-bit number with minimum value 0 and maximum value 2<sup>32</sup> - 1 (4,294,967,295). TimeTicks measures time in hundredths of a second. Uptime on a device is measured using this datatype. |
+| Opaque | Allows any other ASN.1 encoding to be suffed into an OCTET STRING. |
