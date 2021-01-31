@@ -54,3 +54,52 @@ Table 2-1. SMIv1 datatypes
 | Gauge | A 32-bit number with minimum value 0 and maximum value 2<sup>32</sup>-1 (4,294,967,295). Unlike a Counter, a Gauge can increase and decrease at will, but it can never exceed its maximum value. The interface speed on a router is measured with a Gauge. |
 | TimeTicks | A 32-bit number with minimum value 0 and maximum value 2<sup>32</sup> - 1 (4,294,967,295). TimeTicks measures time in hundredths of a second. Uptime on a device is measured using this datatype. |
 | Opaque | Allows any other ASN.1 encoding to be suffed into an OCTET STRING. |
+
+### Extensions to the SMI in Version 2
+SMIv2 extends the SMI object tree by adding the snmpV2 branch to the internet subtree, adding several new datatypes and making a number of other changes. The OID for this new branch is 1.3.6.1.6.3.1.1, or iso.org.dod.internet.snmpV2.snmpModules.snmpMIB.snmpMIBObjects.
+
+Table 2-2. New datatypes for SMIv2
+
+| Datatype   | Description                                                  |
+| ---------- | ------------------------------------------------------------ |
+| Integer32  | Same as an INTEGER                                           |
+| Integer32  | Same as an INTEGER                                           |
+| Counter32  | Same as a Counter                                            |
+| Gauge32    | Same as a Gauge                                              |
+| Unsigned32 | Represents decimal values in the range of 0 to 2<sup>32</sup> - 1, inclusive. |
+| Counter64  | Similar to Counter32, but its maximum values is 18,446,744,073,709,551,615. Counter64 is ideal for situations in which a Counter32 may wrap back to 0 in a short amount of time. |
+| BITS       | An enumeration of nonnegative named bits.                    |
+
+### SNMP Operations
+- get
+- getnext
+- getbulk (SNMPv2 and SNMPv3)
+- set
+- getresponse
+- trap
+- notification (SNMPv2 and SNMPv3)
+- inform (SNMPv2 and SNMPv3)
+- report (SNMPv2 and SNMPv3)
+
+
+#### SNMP trap
+A trap is a way for an agent to tell the NMS that something bad has happened.
+Here are a few situations that a trap might report:
+- A network interface on the device (where the agent is running) has gone down.
+- A network interface on the device (where the agent is running) has come back up.
+- An incoming call to a modem rack was unable to establish a connection to a modem.
+- The fan on a switch or router has failed.
+
+
+Table 2-8. Generic traps
+
+
+| Generic trap name and number | Definition |
+|  ----  | ----  |
+| coldStart (0) | Indicates that the agent has rebooted. All management variables will be reset; specifically, Counters and Gauges will be reset to zero (0). One nice thing about the coldStart trap is that it can be used to determine when new hardware is added to the network. When device is powered on, it sends this trap to its trap destination. If the trap destination is set correctly (i.e., to the IP address of your NMS), the NMS can receive the trap and determine whether it needs to manage the device. |
+| warmStart (1) | Indicates that the agent has reinitialized itself. None of the management variables will be reset. |
+| linkDown (2) | Sent when an interface on a device goes down. The first variable binding identifies the index in the interfaces table for the interface that went down. |
+| linkUp (3) | Sent when an interface on a device comes back up. The first variable binding identifies which interface came back up. |
+| authenticationFailure (4) | Indicates that someone has tried to query your agent with an incorrect community string; useful in determining if someone is trying to gain unauthorized access to one of your devices. |
+| egpNeighborLoss (5) | Indicates that an EGP neighbor has gone down. |
+| enterpriseSpecific (6) | Indicates that the trap is enterprise-specific. SNMP vendors and users define their own traps under the private-enterprise branch of the SMI object tree. To process this trap properly, the NMS has to decode the specific trap number that is part of the SNMP message. |
